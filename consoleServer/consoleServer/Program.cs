@@ -11,8 +11,22 @@ namespace consoleServer
 {
     class Program
     {
-        private static Thread serverThread;
+        private static IPAddress IP;
+
+        public static void Main(string[] args)
+        {
+            getIp();
+            Console.WriteLine("Multi-Threaded TCP Server");
+            Console.WriteLine("IPAddress: " + getIp().ToString());
+            Console.WriteLine("Port: 5342");
+            Server server = new Server(5342);
+        }
+
+
+
+       /* private static Thread serverThread;
         private static Thread exitThread;
+        private static Thread socketThread;
         private static IPAddress ipAdress;
         private static TcpListener myList;
         private static string serverIP;
@@ -20,17 +34,18 @@ namespace consoleServer
 
         public static void Main(string[] args)
         {
-            serverIP = "10.111.200.73"; // getIp();
+            serverIP = "10.110.110.167"; // getIp();
 
             ipAdress = IPAddress.Parse(serverIP);
 
             // Initializes the Listener
             myList = new TcpListener(ipAdress, 5431);
 
-            serverThread = new Thread(runServer);
+            serverThread = new Thread(new ThreadStart(runServer));
+            serverThread.Start();
             exitThread = new Thread(stopServer);
             exitThread.Start();
-            serverThread.Start();
+            
             
         }
 
@@ -70,6 +85,24 @@ namespace consoleServer
 
                 while(true)
                 {
+
+                    socketThread = new Thread(runSocket);
+                    socketThread.Start();
+
+                    
+                    
+                }
+
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error.... ", e.StackTrace);
+            }
+        }
+
+        public static void runSocket()
+        {
                     Socket s = myList.AcceptSocket();
 
                     
@@ -91,21 +124,10 @@ namespace consoleServer
 
 
                     s.Close();
-                    
-                }
+        }*/
 
-                
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error.... ", e.StackTrace);
-            }
-        }
-
-
-        public static string getIp()
+        public static IPAddress getIp()
         {
-            string ip = "";
             string strHostName = "";
             strHostName = System.Net.Dns.GetHostName();
 
@@ -113,9 +135,9 @@ namespace consoleServer
 
             IPAddress[] addr = ipEntry.AddressList;
 
-            ip = addr[2].ToString();
+            IP = addr[2];
 
-            return ip;
+            return IP;
         }
     }
 }

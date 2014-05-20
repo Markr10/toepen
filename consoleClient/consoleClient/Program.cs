@@ -13,7 +13,19 @@ namespace consoleClient
     {
         static void Main(string[] args)
         {
-            try
+            Console.WriteLine("Multi-Threaded TCP Client");
+            Console.WriteLine("Provide IP:");
+            String ip = Console.ReadLine();
+
+            Console.WriteLine("Provide Port:");
+            int port = Int32.Parse(Console.ReadLine());
+
+            Client client = new Client(ip, port);   
+        }
+
+
+
+        /*try
             {
                 while (true)
                 {
@@ -22,7 +34,7 @@ namespace consoleClient
                 Console.WriteLine(">> Connecting");
 
                 //same ip as in server programm
-                tcpclnt.Connect("10.111.200.73", 5431);
+                tcpclnt.Connect("10.110.110.167", 5342);
 
                 Console.WriteLine(">> Connected...");
 
@@ -61,6 +73,6 @@ namespace consoleClient
                 Console.WriteLine("Error.... {0}", e.StackTrace);
             }
 
-        }
+        }*/
     }
 }
