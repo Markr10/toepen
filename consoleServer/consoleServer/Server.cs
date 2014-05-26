@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace consoleServer
             LoopClients();
         }
 
-        
+
         public void LoopClients()
         {
             while (_isRunning)
@@ -52,6 +53,7 @@ namespace consoleServer
             // but there is no forcing flush, even when requested
 
             Boolean bClientConnected = true;
+            
             String sData = null;
 
             while (bClientConnected)
@@ -61,8 +63,10 @@ namespace consoleServer
                     // reads from stream
                     sData = sReader.ReadLine();
 
+                    Messages bericht = JsonConvert.DeserializeObject<Messages>(sData);
+
                     // shows content on the console.
-                    Console.WriteLine("Client > " + sData);
+                    Console.WriteLine(bericht.Name + "> " + bericht.Message);
 
                 }
                 catch (Exception e)
@@ -74,4 +78,5 @@ namespace consoleServer
             }
         }
     }
+
 }
