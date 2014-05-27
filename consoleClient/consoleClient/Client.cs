@@ -45,7 +45,7 @@ namespace consoleClient
 
 
                 // if you want to receive anything
-                // String sDataIncomming = _sReader.ReadLine();
+                String sDataIncomming = _sReader.ReadLine();
             }
         }
     }

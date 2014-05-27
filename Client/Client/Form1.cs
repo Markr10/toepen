@@ -25,10 +25,9 @@ namespace Client
         private void button2_Click(object sender, EventArgs e)
         {
 
-             name = naam.Text;
            
-            string ip = ipadres.Text;
-            ip = "127.0.0.1";
+            //string ip = ipadres.Text;
+            string ip = "127.0.0.1";
 
             Console.WriteLine("Provide Port:");
            // int port = Int32.Parse(poort.Text);
@@ -47,11 +46,21 @@ namespace Client
         private void btnSend_Click(object sender, EventArgs e)
         {
             Messages bericht = new Messages();
-            bericht.Name = name;
+            bericht.Name = SystemInformation.ComputerName;
             bericht.Message = invoer.Text;
 
             client.HandleCommunication(JsonConvert.SerializeObject(bericht));
 
+        }
+
+        private void response_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            response.Text = client.getResponse();
         }
     }
 }

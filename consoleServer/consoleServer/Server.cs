@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,9 +16,12 @@ namespace consoleServer
     {
         private TcpListener _server;
         private Boolean _isRunning;
+        private static ArrayList connectedClients;
+        
 
         public Server(int port)
         {
+            connectedClients = new ArrayList();
             _server = new TcpListener(IPAddress.Any, port);
             _server.Start();
 
@@ -34,6 +38,8 @@ namespace consoleServer
                 // wait for client connection
                 TcpClient newClient = _server.AcceptTcpClient();
 
+                
+
                 // client found.
                 // create a thread to handle communication
                 Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
@@ -45,6 +51,13 @@ namespace consoleServer
         {
             // retrieve client from parameter passed to thread
             TcpClient client = (TcpClient)obj;
+
+            String ipClient = client.Client.LocalEndPoint.ToString();
+
+            var output = ipClient.Split(new[] { ':', ' ' });
+            
+            connectedClients.Add(output[0].ToString());
+           
 
             // sets two streams
             StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
@@ -67,6 +80,11 @@ namespace consoleServer
 
                     // shows content on the console.
                     Console.WriteLine(bericht.Name + "> " + bericht.Message);
+                    
+                    string response = Console.ReadLine();
+                    // to write something back.
+                    sWriter.WriteLine(response);
+                    sWriter.Flush();
 
                 }
                 catch (Exception e)
