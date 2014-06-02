@@ -134,8 +134,7 @@ namespace consoleServer
             IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(strHostName);
 
             IPAddress[] addr = ipEntry.AddressList;
-
-            IP = addr[2];
+            IP = addr[1];
 
             return IP;
         }

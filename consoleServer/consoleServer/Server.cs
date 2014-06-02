@@ -17,7 +17,10 @@ namespace consoleServer
         private TcpListener _server;
         private Boolean _isRunning;
         private static ArrayList connectedClients;
-        
+
+        // proef om alle threads melding te geven
+        private static EventWaitHandle _waitHandle = new EventWaitHandle (false, EventResetMode.ManualReset);
+        private ArrayList threads;
 
         public Server(int port)
         {
@@ -27,7 +30,10 @@ namespace consoleServer
 
             _isRunning = true;
 
+            threads = new ArrayList();
+
             LoopClients();
+
         }
 
 
@@ -35,7 +41,7 @@ namespace consoleServer
         {
             while (_isRunning)
             {
-                // wait for client connection
+                // wait for client connection, then go further
                 TcpClient newClient = _server.AcceptTcpClient();
 
                 
@@ -44,6 +50,12 @@ namespace consoleServer
                 // create a thread to handle communication
                 Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
                 t.Start(newClient);
+                threads.Add(t);
+                if (threads.Count >= 2)
+                {
+                    Thread.Sleep(10000);
+                    _waitHandle.Set();
+                }
             }
         }
 
@@ -81,17 +93,22 @@ namespace consoleServer
                     // shows content on the console.
                     Console.WriteLine(bericht.Name + "> " + bericht.Message);
                     
-                    string response = Console.ReadLine();
-                    // to write something back.
-                    sWriter.WriteLine(response);
+                    //string response = Console.ReadLine();
+                    //// to write something back.
+                    //sWriter.WriteLine(response);
+                    _waitHandle.WaitOne();
+                    Console.WriteLine("Send to" + bericht.Name);
+                    sWriter.WriteLine("Notified");
                     sWriter.Flush();
 
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("Connection lost!");
                     Thread.Sleep(5000);
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
+                    // Schakel thread uit wanneer connection is lost.
+                    bClientConnected = false;
                 }
             }
         }
