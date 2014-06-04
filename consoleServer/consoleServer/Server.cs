@@ -88,16 +88,16 @@ namespace consoleServer
                     // reads from stream
                     sData = sReader.ReadLine();
 
-                    Messages bericht = JsonConvert.DeserializeObject<Messages>(sData);
+                    PlayCard playCard = JsonConvert.DeserializeObject<PlayCard>(sData);
 
                     // shows content on the console.
-                    Console.WriteLine(bericht.Name + "> " + bericht.Message);
+                    Console.WriteLine(playCard.Name + "> " + playCard.Card);
                     
                     //string response = Console.ReadLine();
                     //// to write something back.
                     //sWriter.WriteLine(response);
                     _waitHandle.WaitOne();
-                    Console.WriteLine("Send to" + bericht.Name);
+                    Console.WriteLine("Send to" + playCard.Name);
                     sWriter.WriteLine("Notified");
                     sWriter.Flush();
 
@@ -106,9 +106,10 @@ namespace consoleServer
                 {
                     Console.WriteLine("Connection lost!");
                     Thread.Sleep(5000);
-                    //Environment.Exit(0);
-                    // Schakel thread uit wanneer connection is lost.
                     bClientConnected = false;
+                    Environment.Exit(0);
+                    // Schakel thread uit wanneer connection is lost.
+                    
                 }
             }
         }
